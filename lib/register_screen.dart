@@ -16,7 +16,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   String number = '';
   String password = '';
   String rePassword = '';
-  bool isHiddenPassword = true;
+  bool isHiddenPassword1 = true;
+  bool isHiddenConfirmPassword = true;
 
   final TextEditingController _password = TextEditingController();
   final TextEditingController _confirmPassword = TextEditingController();
@@ -25,6 +26,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print(tabIndex);
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
@@ -71,14 +73,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       child: ElevatedButton(
                         onPressed: () {
                           setState(() {
-                            tabIndex = 1;
+                            tabIndex = 0;
                           });
                         },
                         style: ElevatedButton.styleFrom(
-                          primary: tabIndex == 1
+                          primary: tabIndex == 0
                               ? Colors.indigoAccent
                               : Colors.white, // background
-                          onPrimary: tabIndex == 1
+                          onPrimary: tabIndex == 0
                               ? Colors.white
                               : Colors.black, // foreground
                         ),
@@ -92,14 +94,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       child: ElevatedButton(
                         onPressed: () {
                           setState(() {
-                            tabIndex = 2;
+                            tabIndex = 1;
                           });
                         },
                         style: ElevatedButton.styleFrom(
-                          primary: tabIndex == 2
+                          primary: tabIndex == 1
                               ? Colors.indigoAccent
                               : Colors.white, // background
-                          onPrimary: tabIndex == 2
+                          onPrimary: tabIndex == 1
                               ? Colors.white
                               : Colors.black, // foreground
                         ),
@@ -109,8 +111,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ],
                 ),
                 TextFormField(
+                  textInputAction: TextInputAction.next,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
-                  keyboardType: TextInputType.name,
+                  keyboardType: TextInputType.text,
+                  textCapitalization: TextCapitalization.sentences,
                   decoration: const InputDecoration(
                       labelText: "Full Name",
                       labelStyle: TextStyle(
@@ -132,6 +136,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   onChanged: (value) => setState(() => name = value),
                 ),
                 TextFormField(
+                  textInputAction: TextInputAction.next,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   keyboardType: TextInputType.number,
                   decoration: const InputDecoration(
@@ -148,6 +153,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     if (value.length < 10) {
                       return "Please enter valid phone";
                     }
+                    if (!RegExp( r'(^(?:[+0]9)?[0-9]{10,12}$)').hasMatch(value)) {
+                      return "Invalid phone number";
+                    }
 
                     return null;
                   },
@@ -155,7 +163,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 TextFormField(
                   controller: _password,
-                  obscureText: isHiddenPassword,
+                  obscureText: isHiddenPassword1,
+                  textInputAction: TextInputAction.next,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   decoration: InputDecoration(
                       labelText: "Password",
@@ -174,7 +183,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     if (!RegExp(
                             r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
                         .hasMatch(value)) {
-                      return "Password should contain at least one upper case, one lower case, one digit, one Special character.";
+                      return "Password is not required";
                     }
                     return null;
                   },
@@ -182,7 +191,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 TextFormField(
                   controller: _confirmPassword,
-                  obscureText: true,
+                  obscureText: isHiddenConfirmPassword ,
+                  textInputAction: TextInputAction.next,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   decoration: InputDecoration(
                       labelText: "Confirm Password",
@@ -191,7 +201,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         fontSize: 15,
                       ),
                       suffixIcon: InkWell(
-                        onTap: _togglePasswordView,
+                        onTap: _toggleConfirmPasswordView,
                         child: const Icon(Icons.visibility),
                       )),
                   validator: (value) {
@@ -270,7 +280,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   void _togglePasswordView() {
     setState(() {
-      isHiddenPassword = !isHiddenPassword;
+      isHiddenPassword1 = !isHiddenPassword1;
+    });
+  }
+  void _toggleConfirmPasswordView(){
+    setState(() {
+      isHiddenConfirmPassword = !isHiddenConfirmPassword;
     });
   }
 }

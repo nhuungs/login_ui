@@ -40,6 +40,7 @@ class _LoginScreenState extends State<LoginScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 32),
                 child: TextFormField(
+                  textInputAction: TextInputAction.next,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   keyboardType: TextInputType.emailAddress,
                   decoration: const InputDecoration(
@@ -66,6 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 32),
                 child: TextFormField(
+                  textInputAction: TextInputAction.next,
                   obscureText: isHiddenPassword,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   decoration: InputDecoration(
@@ -79,7 +81,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: const Icon(Icons.visibility),
                       )),
                   validator: (value) {
-                    if (value!.length < 7) {
+                    if (value!.isEmpty) {
+                      return "Please enter password";
+                    }
+                    if (value.length < 7) {
                       return "Password must be at least 8 characters long.";
                     }
                     if (!RegExp(
@@ -191,7 +196,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: RichText(
                       text: const TextSpan(children: [
                     TextSpan(
-                        text: "Don't have an account ?",
+                        text: "Don't have an account?  ",
                         style: TextStyle(color: Colors.black)),
                     TextSpan(
                       text: "Register Now",
